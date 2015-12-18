@@ -1,6 +1,4 @@
-Stork
+Lion
 =====
 
-"Fork Stork" to create a new MOOSE-based application.
-
-For more information see: [http://mooseframework.org/create-an-app/](http://mooseframework.org/create-an-app/)
+Lion is a simulation tool for modeling the coevolution of microstructure and properties in materials under extreme environments. It is under development at the Microstructure Science and Engineering Laboratory at Pennsylvania State University under the direction of Professor Michael Tonks.
