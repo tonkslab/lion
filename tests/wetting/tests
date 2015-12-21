@@ -1,0 +1,12 @@
+[Tests]
+  [./constant_M]
+    type = 'Exodiff'
+    input = 'constant_mobility.i'
+    exodiff = 'constant_mobility_out.e'
+  [../]
+  [./heterogeneous_M]
+    type = 'Exodiff'
+    input = 'heterogeneous_mobility.i'
+    exodiff = 'heterogeneous_mobility_out.e'
+  [../]
+[]
