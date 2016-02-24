@@ -4,6 +4,16 @@
 #include "ModulesApp.h"
 #include "MooseSyntax.h"
 
+/*
+ * Actions
+*/
+#include "ACInterfaceKernelAction.h"
+#include "AllenCahnKernelAction.h"
+#include "MatVecRealGradAuxKernelAction.h"
+#include "MultiAuxVariablesAction.h"
+#include "SGRigidBodyKernelAction.h"
+#include "TimeDerivativeKernelAction.h"
+
 template<>
 InputParameters validParams<LionApp>()
 {
@@ -50,6 +60,19 @@ LionApp::registerObjects(Factory & factory)
 // External entry point for dynamic syntax association
 extern "C" void LionApp__associateSyntax(Syntax & syntax, ActionFactory & action_factory) { LionApp::associateSyntax(syntax, action_factory); }
 void
-LionApp::associateSyntax(Syntax & /*syntax*/, ActionFactory & /*action_factory*/)
+LionApp::associateSyntax(Syntax & syntax, ActionFactory & action_factory)
 {
+  syntax.registerActionSyntax("ACInterfaceKernelAction", "Kernels/ACInterfaceKernel");
+  syntax.registerActionSyntax("AllenCahnKernelAction", "Kernels/AllenCahnKernel");
+  syntax.registerActionSyntax("MatVecRealGradAuxKernelAction", "AuxKernels/MatVecRealGradAuxKernel");
+  syntax.registerActionSyntax("MultiAuxVariablesAction", "AuxVariables/MultiAuxVariables");
+  syntax.registerActionSyntax("SGRigidBodyKernelAction", "Kernels/SGRigidBodyKernel");
+  syntax.registerActionSyntax("TimeDerivativeKernelAction", "Kernels/TimeDerivativeKernel");
+
+  registerAction(ACInterfaceKernelAction, "add_kernel");
+  registerAction(AllenCahnKernelAction, "add_kernel");
+  registerAction(MatVecRealGradAuxKernelAction, "add_aux_kernel");
+  registerAction(MultiAuxVariablesAction, "add_aux_variable");
+  registerAction(SGRigidBodyKernelAction, "add_kernel");
+  registerAction(TimeDerivativeKernelAction, "add_kernel");
 }
