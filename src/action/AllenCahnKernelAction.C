@@ -63,6 +63,9 @@ AllenCahnKernelAction::act()
       params.set<MaterialPropertyName>("f_name") = getParam<std::string>("f_name");
       params.set<bool>("implicit") = _implicit;
       params.set<bool>("use_displaced_mesh") = getParam<bool>("use_displaced_mesh");
+
+      std::string kernel_name = "AC_" + var_name;
+      _problem->addKernel("AllenCahn", kernel_name, params);
     }
   }
 }

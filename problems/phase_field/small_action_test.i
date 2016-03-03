@@ -51,9 +51,9 @@
     type = SpecifiedSmoothCircleIC
     variable = rho
     x_positions = '150 450'
-    y_positions = '150 150'
+    y_positions = '150 450'
     z_positions = '0 0'
-    radii = '150 150'
+    radii = '125 150'
     invalue = 1.0
     outvalue = 0.0
   [../]
@@ -70,9 +70,9 @@
     type = SmoothCircleIC
     variable = gr01
     x1 = 450
-    y1 = 150
+    y1 = 450
     radius = 150
-    invalue = 1.0
+    invalue = 0.7
     outvalue = 0.0
   [../]
 []
@@ -195,7 +195,7 @@
     etas = 'gr00 gr01'
     c = rho
   [../]
-  [./force_density]
+  [./force_density_ext]
     type = ExternalForceDensityMaterial
     block = 0
     c = rho
@@ -239,7 +239,7 @@
   nl_rel_tol = 1e-07
   start_time = 0.0
   dt = 0.1
-  num_steps = 20
+  num_steps = 80
 []
 
 [Outputs]
