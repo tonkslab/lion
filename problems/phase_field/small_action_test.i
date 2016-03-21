@@ -14,7 +14,7 @@
 [Variables]
   [./rho]
   [../]
-  [./mew]
+  [./mu]
   [../]
   [./PolycrystalVariables]
     op_num = 2
@@ -108,28 +108,28 @@
     c = rho
   [../]
 
-  [./Dt_mew]
+  [./Dt_mu]
     type = CoupledTimeDerivative
-    variable = mew
+    variable = mu
     v = rho
   [../]
   [./CH_WRes]
     type = SplitCHWRes
-    variable = mew
+    variable = mu
     mob_name = M
   [../]
   [./CH_Parsed]
     type = SplitCHParsed
     variable = rho
     f_name = f_loc
-    w = mew
+    w = mu
     kappa_name = kappa_c
     args = 'gr00 gr01'
   [../]
 
   [./vadv_rho]
     type = MultiGrainRigidBodyMotion
-    variable = mew
+    variable = mu
     c = rho
     v = 'gr00 gr01'
   [../]
@@ -239,7 +239,7 @@
   nl_rel_tol = 1e-07
   start_time = 0.0
   dt = 0.1
-  num_steps = 80
+  num_steps = 20
 []
 
 [Outputs]

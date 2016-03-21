@@ -45,18 +45,11 @@ MultiAuxVariablesAction::MultiAuxVariablesAction(const InputParameters & params)
 void
 MultiAuxVariablesAction::act()
 {
-  
+
 MooseEnum order = getParam<MooseEnum>("order");
 MooseEnum family = getParam<MooseEnum>("family");
 std::vector<unsigned int> _op_num = getParam<std::vector<unsigned int> >("op_num");
 std::vector<std::string> _var_name_base = getParam<std::vector<std::string> >("var_name_base");
-
-#ifdef DEBUG
-  Moose::err << "Inside the MultiAuxVariablesAction Object\n"
-             << "VariableBase: " << _var_name_base
-             << "\torder: " << getParam<MooseEnum>("order")
-             << "\tfamily: " << getParam<MooseEnum>("family") << std::endl;
-#endif
 
 unsigned int size_o = _op_num.size();
 unsigned int size_v = _var_name_base.size();
