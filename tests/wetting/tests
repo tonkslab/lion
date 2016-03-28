@@ -9,4 +9,9 @@
     input = 'heterogeneous_mobility.i'
     exodiff = 'heterogeneous_mobility_out.e'
   [../]
+  [./gravity]
+    type = 'Exodiff'
+    input = 'gravity.i'
+    exodiff = 'gravity_out.e'
+  [../]
 []

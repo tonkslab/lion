@@ -14,6 +14,11 @@
 #include "SGRigidBodyKernelAction.h"
 #include "TimeDerivativeKernelAction.h"
 
+/*
+ * Kernels
+*/
+#include "MatConvection.h"
+
 template<>
 InputParameters validParams<LionApp>()
 {
@@ -55,6 +60,7 @@ extern "C" void LionApp__registerObjects(Factory & factory) { LionApp::registerO
 void
 LionApp::registerObjects(Factory & factory)
 {
+  registerKernel(MatConvection);
 }
 
 // External entry point for dynamic syntax association
