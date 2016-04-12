@@ -19,15 +19,12 @@ InputParameters validParams<MatConvection>()
   InputParameters params = validParams<Kernel>();
   params.addRequiredParam<MaterialPropertyName>("mat_prop", "Name of the property (scalar) to multiply the MatConvection kernel with");
   params.addRequiredParam<RealVectorValue>("driving_vector", "Driving vector");
-  params.addRequiredCoupledVar("conserved_var", "Conserved variable being solved for with the split equation");
   params.addCoupledVar("args", "Vector of nonlinear variable arguments this object depends on");
   return params;
 }
 
 MatConvection::MatConvection(const InputParameters & parameters) :
     DerivativeMaterialInterface<JvarMapInterface<Kernel> >(parameters),
-    _c_var(coupled("conserved_var")),
-    _grad_c(coupledGradient("conserved_var")),
     _conv_prop(getMaterialProperty<Real>("mat_prop")),
     _driving_vector(getParam<RealVectorValue>("driving_vector")),
     _nvar(_coupled_moose_vars.size()),
@@ -43,13 +40,13 @@ MatConvection::MatConvection(const InputParameters & parameters) :
 Real
 MatConvection::computeQpResidual()
 {
-  return _test[_i][_qp] * (_conv_prop[_qp] * _driving_vector * _grad_c[_qp]);
+  return _test[_i][_qp] * (_conv_prop[_qp] * _driving_vector * _grad_u[_qp]);
 }
 
 Real
 MatConvection::computeQpJacobian()
 {
-  return 0.0;
+  return _test[_i][_qp] * _driving_vector * _conv_prop[_qp] * _grad_phi[_j][_qp];
 }
 
 Real
@@ -57,9 +54,6 @@ MatConvection::computeQpOffDiagJacobian(unsigned int jvar)
 {
   // get the coupled variable jvar is referring to
   unsigned int cvar;
-
-  if (jvar == _c_var)
-    return _test[_i][_qp] * _driving_vector * _conv_prop[_qp] * _grad_phi[_j][_qp];
 
   if (!mapJvarToCvar(jvar, cvar))
     return 0.0;

@@ -128,13 +128,12 @@
     variable = phi
     driving_vector = '0 -0.1 0'
     mat_prop = M
-    conserved_var = phi
     args = phi
   [../]
 []
 
 [Materials]
-  active = 'V_liquid V_gas V phi_switching2 phi_barrier gamma L M_const'
+  active = 'V_liquid V_gas V phi_switching phi_barrier gamma L M_const'
 [./V_liquid]
   type = DerivativeParsedMaterial
   block = 0
@@ -173,13 +172,6 @@
   function = '(1 - h) * V_gas + h * V_liq + 1.0 * g'
 [../]
 [./phi_switching]
-  type = SwitchingFunctionMaterial
-  block = 0
-  eta = phi
-  h_order = SIMPLE
-  derivative_order = 4
-[../]
-[./phi_switching2]
   type = DerivativeParsedMaterial
   block = 0
   args = phi

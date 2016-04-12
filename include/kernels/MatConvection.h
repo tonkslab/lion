@@ -38,10 +38,6 @@ protected:
   virtual Real computeQpJacobian();
   virtual Real computeQpOffDiagJacobian(unsigned int jvar);
 
-  const unsigned int _c_var;
-
-  const VariableGradient & _grad_c;
-
   const MaterialProperty<Real> & _conv_prop;
 
   /// Vector defining driving force for the convection
