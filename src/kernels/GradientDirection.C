@@ -11,48 +11,59 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
-#include "MatConvection.h"
+#include "GradientDirection.h"
 
 template<>
-InputParameters validParams<MatConvection>()
+InputParameters validParams<GradientDirection>()
 {
   InputParameters params = validParams<Kernel>();
-  params.addRequiredParam<MaterialPropertyName>("mat_prop", "Name of the property (scalar) to multiply the MatConvection kernel with");
-  params.addRequiredParam<RealVectorValue>("driving_vector", "Driving vector");
+  params.addRequiredParam<MaterialPropertyName>("mat_prop", "Name of the property (scalar) to multiply the GradientDirection kernel with");
   params.addCoupledVar("args", "Vector of nonlinear variable arguments this object depends on");
   return params;
 }
 
-MatConvection::MatConvection(const InputParameters & parameters) :
+GradientDirection::GradientDirection(const InputParameters & parameters) :
     DerivativeMaterialInterface<JvarMapInterface<Kernel> >(parameters),
-    _conv_prop(getMaterialProperty<Real>("mat_prop")),
-    _dconv_propdu(getMaterialPropertyDerivative<Real>("mat_prop", _var.name())),
-    _driving_vector(getParam<RealVectorValue>("driving_vector")),
+    _property(getMaterialProperty<Real>("mat_prop")),
+    _dpropertydu(getMaterialPropertyDerivative<Real>("mat_prop", _var.name())),
     _nvar(_coupled_moose_vars.size()),
-    _dconv_propdarg(_nvar)
+    _dpropertydarg(_nvar)
 {
   for (unsigned int i = 0; i < _nvar; ++i)
   {
     MooseVariable *ivar = _coupled_moose_vars[i];
-    _dconv_propdarg[i] = &getMaterialPropertyDerivative<Real>("mob_name", ivar->name());
+    _dpropertydarg[i] = &getMaterialPropertyDerivative<Real>("mob_name", ivar->name());
   }
 }
 
 Real
-MatConvection::computeQpResidual()
+GradientDirection::computeQpResidual()
 {
-  return _test[_i][_qp] * _conv_prop[_qp] * _driving_vector * _grad_u[_qp];
+  Real res = 0;
+  if (_grad_u[_qp].norm() > 0)
+    res = _property[_qp] * _grad_u[_qp] / _grad_u[_qp].norm() * _grad_test[_i][_qp];
+
+  return res;
 }
 
 Real
-MatConvection::computeQpJacobian()
+GradientDirection::computeQpJacobian()
 {
-  return _test[_i][_qp] * _driving_vector * _conv_prop[_qp] * _grad_phi[_j][_qp] +
-  _test[_i][_qp] * _dconv_propdu[_qp] * _driving_vector * _grad_u[_qp] * _phi[_j][_qp];
+  Real jac = 0;
+  if (_grad_u[_qp].norm() > 0)
+  {
+    RealGradient dgradunorm = _grad_u[_qp]/_grad_u[_qp].norm();
+
+    jac = _property[_qp] * _grad_phi[_j][_qp] / _grad_u[_qp].norm() * _grad_test[_i][_qp]
+    - _property[_qp] * _grad_u[_qp] / _grad_u[_qp].norm_sq() * dgradunorm * _grad_phi[_j][_qp] * _grad_test[_i][_qp]
+    + _dpropertydu[_qp] * _phi[_j][_qp] * _grad_u[_qp] / _grad_u[_qp].norm() * _grad_test[_i][_qp];
+  }
+
+  return jac;
 }
 
 Real
-MatConvection::computeQpOffDiagJacobian(unsigned int jvar)
+GradientDirection::computeQpOffDiagJacobian(unsigned int jvar)
 {
   // get the coupled variable jvar is referring to
   unsigned int cvar;
@@ -60,5 +71,5 @@ MatConvection::computeQpOffDiagJacobian(unsigned int jvar)
   if (!mapJvarToCvar(jvar, cvar))
     return 0.0;
 
-  return _test[_i][_qp] * _driving_vector * _phi[_j][_qp] * (*_dconv_propdarg[cvar])[_qp] * _grad_u[_qp];
+  return (*_dpropertydarg[cvar])[_qp] * _phi[_j][_qp] * _grad_u[_qp] / _grad_u[_qp].norm() * _grad_test[_i][_qp];
 }

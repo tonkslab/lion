@@ -11,46 +11,43 @@
 /*                                                              */
 /*            See COPYRIGHT for full restrictions               */
 /****************************************************************/
-#ifndef MATCONVECTION_H
-#define MATCONVECTION_H
+#ifndef GRADIENTDIRECTION_H
+#define GRADIENTDIRECTION_H
 
 #include "Kernel.h"
 #include "JvarMapInterface.h"
 #include "DerivativeMaterialInterface.h"
 
 // Forward Declaration
-class MatConvection;
+class GradientDirection;
 
 
 template<>
-InputParameters validParams<MatConvection>();
+InputParameters validParams<GradientDirection>();
 
 /**
  * Compute convection term for phase field simulations
  */
-class MatConvection : public DerivativeMaterialInterface<JvarMapInterface<Kernel> >
+class GradientDirection : public DerivativeMaterialInterface<JvarMapInterface<Kernel> >
 {
 public:
-  MatConvection(const InputParameters & parameters);
+  GradientDirection(const InputParameters & parameters);
 
 protected:
   virtual Real computeQpResidual();
   virtual Real computeQpJacobian();
   virtual Real computeQpOffDiagJacobian(unsigned int jvar);
 
-  const MaterialProperty<Real> & _conv_prop;
+  const MaterialProperty<Real> & _property;
 
-  const MaterialProperty<Real> & _dconv_propdu;
-
-  /// Vector defining driving force for the convection
-  const RealVectorValue _driving_vector;
+  const MaterialProperty<Real> & _dpropertydu;
 
   /// number of coupled variables
   const unsigned int _nvar;
 
   /// @{ Mobility derivative w.r.t. other coupled variables
-  std::vector<const MaterialProperty<Real> *> _dconv_propdarg;
+  std::vector<const MaterialProperty<Real> *> _dpropertydarg;
 
 };
 
-#endif // MATCONVECTION_H
+#endif // GRADIENTDIRECTION_H

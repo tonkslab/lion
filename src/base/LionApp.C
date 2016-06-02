@@ -16,6 +16,8 @@
  * Kernels
 */
 #include "MatConvection.h"
+#include "MatTimeDerivative.h"
+#include "GradientDirection.h"
 
 template<>
 InputParameters validParams<LionApp>()
@@ -59,6 +61,8 @@ void
 LionApp::registerObjects(Factory & factory)
 {
   registerKernel(MatConvection);
+  registerKernel(MatTimeDerivative);
+  registerKernel(GradientDirection);
 }
 
 // External entry point for dynamic syntax association
