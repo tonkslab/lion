@@ -21,7 +21,7 @@ InputParameters validParams<AllenCahnKernelAction>()
   params.addParam<bool>("use_displaced_mesh", false, "Whether to use displaced mesh in the kernels");
   params.addParam<std::string>("mob_name", "L", "The mobility used with the kernels");
   params.addParam<std::string>("f_name", "Base name of the free energy function F defined in a DerivativeParsedMaterial");
-  params.addParam<std::vector<VariableName> >("c", "Vector of coupled variables");
+  params.addParam<VariableName>("c", "coupled variable");
 
   return params;
 }
@@ -49,16 +49,15 @@ AllenCahnKernelAction::act()
 
     if (isParamValid("c"))
     {
-      std::vector<VariableName> c = getParam<std::vector<VariableName> >("c");
+      VariableName c = getParam<VariableName>("c");
       unsigned int num_args = c.size();
-      v.resize(_op_num + num_args -1);
+      v.resize(_op_num);
 
       for (unsigned int j = 0; j < _op_num; ++j)
         if (j != op)
           v[ind++] = _var_name_base + Moose::stringify(j);
 
-      for (unsigned int j = 0; j < num_args; ++j)
-        v[ind++] = c[j];
+      v[ind++] = c;
     }
     else
     {
