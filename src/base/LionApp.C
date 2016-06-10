@@ -18,6 +18,8 @@
 #include "MatConvection.h"
 #include "MatTimeDerivative.h"
 #include "GradientDirection.h"
+#include "WettingDirectionBadillo.h"
+#include "WettingInterfaceBadillo.h"
 
 template<>
 InputParameters validParams<LionApp>()
@@ -63,6 +65,8 @@ LionApp::registerObjects(Factory & factory)
   registerKernel(MatConvection);
   registerKernel(MatTimeDerivative);
   registerKernel(GradientDirection);
+  registerKernel(WettingDirectionBadillo);
+  registerKernel(WettingInterfaceBadillo);
 }
 
 // External entry point for dynamic syntax association

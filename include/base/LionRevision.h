@@ -3,6 +3,6 @@
 #ifndef LION_REVISION_H
 #define LION_REVISION_H
 
-#define LION_REVISION "git commit 521c226 on 2016-03-28"
+#define LION_REVISION "git commit a8a7131 on 2016-06-02"
 
 #endif // LION_REVISION_H

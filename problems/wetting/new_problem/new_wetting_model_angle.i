@@ -37,12 +37,12 @@
   [../]
   [./A]
     # Wetting parameter, > 0.5 is hydrophilic, < 0.5 is hydrophobic
-    initial_condition = 0.3
+    initial_condition = 0.7
   [../]
 []
 
 [ICs]
-  active = 'a_IC d_IC2 phi_IC2 density_IC'
+  active = 'a_IC d_IC phi_IC density_IC'
   [./a_IC]
     # This initial condition will be constant through the simulation
     # 0=fluid,gas; 1=solid
@@ -65,26 +65,6 @@
     outside = 0
     variable = b
   [../]
-  [./phi_IC]
-    variable = 'phi'
-    type = SmoothCircleIC
-    invalue = 1
-    outvalue = 0
-    radius = 1.8
-    x1 = 5
-    y1 = 2.3
-    int_width = 0.15
-  [../]
-  [./d_IC]
-    variable = 'd'
-    type = SmoothCircleIC
-    invalue = 1
-    outvalue = 0
-    radius = 1.8
-    x1 = 5
-    y1 = 2.3
-    int_width = 0.15
-  [../]
   [./phi_IC2]
     variable = 'phi'
     type = SmoothCircleIC
@@ -92,7 +72,7 @@
     outvalue = 0
     radius = 3.2
     x1 = 5
-    y1 = -.5
+    y1 = -.8
     int_width = 0.2
   [../]
   [./d_IC2]
@@ -102,12 +82,33 @@
     outvalue = 0
     radius = 3.2
     x1 = 5
-    y1 = -.5
+    y1 = -.8
     int_width = 0.2
+  [../]
+  [./phi_IC]
+    variable = 'phi'
+    type = BoundingBoxIC
+    inside = 1
+    outside = 0
+    x1 = 2
+    x2 = 8
+    y1 = 0.1
+    y2 = 0.3
+  [../]
+  [./d_IC]
+    variable = 'd'
+    type = BoundingBoxIC
+    inside = 1
+    outside = 0
+    x1 = 2
+    x2 = 8
+    y1 = 0.1
+    y2 = 0.3
   [../]
 []
 
 [Kernels]
+  active = 'd_dot d_res w_res phi_dot phi_bulk phi_interface'
   [./d_dot]
     # dot(phi)
     type = CoupledTimeDerivative
@@ -121,7 +122,7 @@
     f_name = V
     kappa_name = gamma
     w = chem_pot
-    args = 'd phi'
+    args = 'phi'
   [../]
   [./w_res]
     # laplacian(mu)
@@ -139,14 +140,14 @@
     f_name = V
     variable = phi
     mob_name = L
-    args = 'd phi'
+    args = 'd'
   [../]
   [./phi_interface]
     type = ACInterface
     variable = phi
     kappa_name = gamma
     mob_name = L
-    args = 'd phi'
+    args = 'd'
   [../]
   [./gravity]
     type = MatConvection
@@ -233,9 +234,6 @@
   [../]
 []
 
-[BCs]
-[]
-
 [Preconditioning]
   [./off_diag_coupling]
     type = SMP
@@ -270,7 +268,7 @@
   [./TimeStepper]
     type = IterationAdaptiveDT
     cutback_factor = 0.75
-    dt = 2.0e-4
+    dt = 1.0e-3
     growth_factor = 1.2
     iteration_window = 2
     optimal_iterations = 8

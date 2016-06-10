@@ -148,7 +148,7 @@
     f_name = V
     kappa_name = gamma
     w = chem_pot
-    args = 'd phi'
+    args = 'phi'
   [../]
   [./w_res]
     # laplacian(mu)
@@ -166,33 +166,33 @@
     f_name = V
     variable = phi
     mob_name = L
-    args = 'd phi'
+    args = 'd'
   [../]
   [./phi_interface]
     type = ACInterface
     variable = phi
     kappa_name = gamma
     mob_name = L
-    args = 'd phi'
+    args = 'd'
   [../]
   [./gravity]
     type = MatConvection
     variable = phi
-    driving_vector = '0 -0.0015 0'
-    mat_prop = M
+    driving_vector = '0.0015 -0.0015 0'
+    mat_prop = 1.0
     args = 'd'
   [../]
 []
 
 [Materials]
-  active = 'V V_gas V_liquid phi_barrier phi_switching L gamma M_const'
+  active = 'V V_gas V_liquid phi_barrier phi_switching L gamma M'
   [./V_liquid]
     type = DerivativeParsedMaterial
     block = 0
     function = '(1 - d)^2 * (1 - a) * (1 - b) + a * (d - A)^2 + 2 * b * d^2'
-    args = 'd A a b'
+    args = 'd a A b'
     f_name = V_liq
-    derivative_order = 3
+    derivative_order = 2
   [../]
   [./V_gas]
     type = DerivativeParsedMaterial
@@ -200,9 +200,8 @@
     constant_names = deq
     constant_expressions = 0.0
     function = '(deq - d)^2 * (1 - a) * (1 - b) + a * (d - A)^2 + 2 * b * d^2'
-    args = 'd A a b'
+    args = 'd a A b'
     f_name = V_gas
-    derivative_order = 3
   [../]
   [./V]
     type = DerivativeParsedMaterial
@@ -212,7 +211,6 @@
     constant_expressions = 1
     material_property_names = 'V_gas(d) V_liq(d) g(phi) h(phi)'
     function = '(1 - h)*V_gas + h*V_liq + W*g'
-    derivative_order = 2
     f_name = V
   [../]
   [./phi_switching]
@@ -220,7 +218,6 @@
     block = 0
     args = phi
     function = '3*phi^2 - 2*phi^3'
-    derivative_order = 3
     f_name = h
   [../]
   [./phi_barrier]
@@ -229,7 +226,6 @@
     args = 'phi a b A'
     function = 'phi^2*(1-phi)^2 * (1 - a) * (1 - b) + a * (phi - A)^2 + 2 * b * phi^2'
     f_name = g
-    derivative_order = 3
   [../]
   [./gamma]
     type = GenericConstantMaterial
@@ -255,7 +251,6 @@
     constant_expressions = '1 0'
     outputs = exodus
     f_name = M
-    derivative_order = 2
     function = 'lb:=ctoff - ctoff^2; if(d<0+ctoff, lb*M0, if(d>1-ctoff, lb*M0, M0*4*(d - d^2)))'
   [../]
 []

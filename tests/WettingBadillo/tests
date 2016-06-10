@@ -1,0 +1,12 @@
+[Tests]
+  [./liq_vapor]
+    type = 'Exodiff'
+    input = 'liq_vapor_interface.i'
+    exodiff = 'liq_vapor_interface_out.e'
+  [../]
+  [./liq_vapor_solid]
+    type = 'Exodiff'
+    input = 'liq_vapor_solid_interface.i'
+    exodiff = 'liq_vapor_solid_interface_out.e'
+  [../]
+[]
