@@ -1,0 +1,7 @@
+[Tests]
+  [./LandauPolynomial]
+    type = 'Exodiff'
+    input = 'landau_polynomial_test.i'
+    exodiff = 'landau_polynomial.e'
+  [../]
+[]

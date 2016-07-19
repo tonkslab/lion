@@ -21,6 +21,11 @@
 #include "WettingDirectionBadillo.h"
 #include "WettingInterfaceBadillo.h"
 
+/*
+ * Materials
+*/
+#include "LandauPolynomialMaterial.h"
+
 template<>
 InputParameters validParams<LionApp>()
 {
@@ -67,6 +72,8 @@ LionApp::registerObjects(Factory & factory)
   registerKernel(GradientDirection);
   registerKernel(WettingDirectionBadillo);
   registerKernel(WettingInterfaceBadillo);
+
+  registerMaterial(LandauPolynomialMaterial);
 }
 
 // External entry point for dynamic syntax association
