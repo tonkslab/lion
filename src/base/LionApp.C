@@ -9,6 +9,7 @@
 */
 #include "ACInterfaceKernelAction.h"
 #include "AllenCahnKernelAction.h"
+#include "CirclesFromFileICAction.h"
 #include "SGRigidBodyKernelAction.h"
 #include "TimeDerivativeKernelAction.h"
 
@@ -83,11 +84,13 @@ LionApp::associateSyntax(Syntax & syntax, ActionFactory & action_factory)
 {
   syntax.registerActionSyntax("ACInterfaceKernelAction", "Kernels/ACInterfaceKernel");
   syntax.registerActionSyntax("AllenCahnKernelAction", "Kernels/AllenCahnKernel");
+  syntax.registerActionSyntax("CirclesFromFileICAction", "ICs/CirclesFromFileIC");
   syntax.registerActionSyntax("SGRigidBodyKernelAction", "Kernels/SGRigidBodyKernel");
   syntax.registerActionSyntax("TimeDerivativeKernelAction", "Kernels/TimeDerivativeKernel");
 
   registerAction(ACInterfaceKernelAction, "add_kernel");
   registerAction(AllenCahnKernelAction, "add_kernel");
+  registerAction(CirclesFromFileICAction, "add_ic");
   registerAction(SGRigidBodyKernelAction, "add_kernel");
   registerAction(TimeDerivativeKernelAction, "add_kernel");
 }

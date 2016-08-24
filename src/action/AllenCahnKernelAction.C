@@ -50,7 +50,6 @@ AllenCahnKernelAction::act()
     if (isParamValid("c"))
     {
       VariableName c = getParam<VariableName>("c");
-      unsigned int num_args = c.size();
       v.resize(_op_num);
 
       for (unsigned int j = 0; j < _op_num; ++j)
