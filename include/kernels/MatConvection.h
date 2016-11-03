@@ -28,7 +28,7 @@ InputParameters validParams<MatConvection>();
 /**
  * Compute convection term for phase field simulations
  */
-class MatConvection : public DerivativeMaterialInterface<JvarMapInterfaceBase<Kernel> >
+class MatConvection : public DerivativeMaterialInterface<JvarMapKernelInterface<Kernel> >
 {
 public:
   MatConvection(const InputParameters & parameters);
