@@ -17,8 +17,6 @@
  * Kernels
 */
 #include "MatConvection.h"
-#include "MatTimeDerivative.h"
-#include "GradientDirection.h"
 #include "WettingDirectionBadillo.h"
 #include "WettingInterfaceBadillo.h"
 
@@ -69,8 +67,6 @@ void
 LionApp::registerObjects(Factory & factory)
 {
   registerKernel(MatConvection);
-  registerKernel(MatTimeDerivative);
-  registerKernel(GradientDirection);
   registerKernel(WettingDirectionBadillo);
   registerKernel(WettingInterfaceBadillo);
 
