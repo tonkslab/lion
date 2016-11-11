@@ -21,6 +21,7 @@
 #include "GradientDirection.h"
 #include "WettingDirectionBadillo.h"
 #include "WettingInterfaceBadillo.h"
+#include "CoupledConvection.h"
 
 /*
  * Materials
@@ -73,7 +74,7 @@ LionApp::registerObjects(Factory & factory)
   registerKernel(GradientDirection);
   registerKernel(WettingDirectionBadillo);
   registerKernel(WettingInterfaceBadillo);
-
+  registerKernel(CoupledConvection);
   registerMaterial(LandauPolynomialMaterial);
 }
 

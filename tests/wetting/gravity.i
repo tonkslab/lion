@@ -36,13 +36,14 @@
   [../]
   [./A]
     # Wetting parameter, > 0 is hydrophilic, < 0 is hydrophobic
-    #initial_condition = 0.75
+    initial_condition = 0.75
   [../]
 []
 
 [ICs]
   [./a_IC] #This initial condition will be constant through the simulation
     # 1=fluid,gas; -1=solid
+    type = BoundingBoxIC
     x1 = 0.1
     x2 = 1.9
     y1 = 0
@@ -50,9 +51,9 @@
     inside = 0
     outside = 1
     variable = a
-    type = BoundingBoxIC
   [../]
   [./d_IC]
+    type = BoundingBoxIC
     x1 = 0
     x2 = 2
     y1 = 0.7
@@ -60,9 +61,9 @@
     inside = 1.0
     outside = 0.0
     variable = d
-    type = BoundingBoxIC
   [../]
   [./phi_IC]
+    type = BoundingBoxIC
     x1 = 0.0
     x2 = 2
     y1 = 0.7
@@ -70,22 +71,11 @@
     inside = 1.0
     outside = 0.0
     variable = phi
-    type = BoundingBoxIC
-  [../]
-  [./A_IC]
-    type = BoundingBoxIC
-    x1 = 0
-    x2 = 1
-    y1 = 0
-    y2 = 2
-    inside = 0.1
-    outside = 0.9
-    variable = A
   [../]
 []
 
 [Kernels]
-  active = 'd_dot d_res w_res phi_dot phi_bulk phi_interface gravity'
+  #active = 'd_dot d_res w_res phi_dot phi_bulk phi_interface gravity'
   [./d_dot]
     # dot(phi)
     type = CoupledTimeDerivative
@@ -99,13 +89,14 @@
     f_name = V
     kappa_name = gamma
     w = chem_pot
-    args = 'd phi'
+    args = 'phi'
   [../]
   [./w_res]
     # laplacian(mu)
     type = SplitCHWRes
     variable = chem_pot
     mob_name = M
+    args = 'd phi'
   [../]
   [./phi_dot]
     type = TimeDerivative
@@ -115,25 +106,26 @@
     type = AllenCahn
     f_name = V
     variable = phi
-    args = d
+    args = 'd'
   [../]
   [./phi_interface]
     type = ACInterface
     variable = phi
     kappa_name = gamma
     mob_name = L
+    args = 'd'
   [../]
   [./gravity]
     type = MatConvection
     variable = phi
     driving_vector = '0 -0.1 0'
     mat_prop = M
-    args = phi
+    args = 'phi'
   [../]
 []
 
 [Materials]
-  active = 'V_liquid V_gas V phi_switching phi_barrier gamma L M_const'
+  #active = 'V_liquid V_gas V phi_switching phi_barrier gamma L M_const'
 [./V_liquid]
   type = DerivativeParsedMaterial
   block = 0
@@ -162,14 +154,6 @@
   fb_name = V_liq
   args = 'd A a b'
   W = 1.0
-[../]
-[./V2]
-  type = DerivativeParsedMaterial
-  block = 0
-  derivative_order = 2
-  material_property_names = 'V_liq(d) h(phi) V_gas(d) g(phi)'
-  args = 'd phi'
-  function = '(1 - h) * V_gas + h * V_liq + 1.0 * g'
 [../]
 [./phi_switching]
   type = DerivativeParsedMaterial
@@ -230,7 +214,7 @@
 []
 
 [Outputs]
-  execute_on = 'initial final'
+  execute_on = 'initial timestep_end'
   exodus = true
   print_perf_log = true
 []
