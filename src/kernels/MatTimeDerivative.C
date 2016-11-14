@@ -23,7 +23,7 @@ InputParameters validParams<MatTimeDerivative>()
 }
 
 MatTimeDerivative::MatTimeDerivative(const InputParameters & parameters) :
-    DerivativeMaterialInterface<JvarMapInterfaceBase<TimeDerivative > >(parameters),
+    DerivativeMaterialInterface<JvarMapKernelInterface<TimeDerivative > >(parameters),
     _coeff(getMaterialProperty<Real>("mat_prop")),
     _dcoeffdu(getMaterialPropertyDerivative<Real>("mat_prop", _var.name())),
     _nvar(_coupled_moose_vars.size()),
@@ -53,10 +53,7 @@ Real
 MatTimeDerivative::computeQpOffDiagJacobian(unsigned int jvar)
 {
   // get the coupled variable jvar is referring to
-  unsigned int cvar;
-
-  if (!mapJvarToCvar(jvar, cvar))
-    return 0.0;
+  const unsigned int cvar = mapJvarToCvar(jvar);
 
   return (*_dcoeffdarg[cvar])[_qp] * _phi[_j][_qp] * TimeDerivative::computeQpResidual();
 }

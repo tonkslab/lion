@@ -23,7 +23,7 @@ InputParameters validParams<GradientDirection>()
 }
 
 GradientDirection::GradientDirection(const InputParameters & parameters) :
-    DerivativeMaterialInterface<JvarMapInterfaceBase<Kernel> >(parameters),
+    DerivativeMaterialInterface<JvarMapKernelInterface<Kernel> >(parameters),
     _property(getMaterialProperty<Real>("mat_prop")),
     _dpropertydu(getMaterialPropertyDerivative<Real>("mat_prop", _var.name())),
     _nvar(_coupled_moose_vars.size()),
@@ -66,10 +66,7 @@ Real
 GradientDirection::computeQpOffDiagJacobian(unsigned int jvar)
 {
   // get the coupled variable jvar is referring to
-  unsigned int cvar;
-
-  if (!mapJvarToCvar(jvar, cvar))
-    return 0.0;
+  const unsigned int cvar = mapJvarToCvar(jvar);
 
   return (*_dpropertydarg[cvar])[_qp] * _phi[_j][_qp] * _grad_u[_qp] / _grad_u[_qp].norm() * _grad_test[_i][_qp];
 }
