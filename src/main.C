@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
   // This creates dynamic memory that we're responsible for deleting
   //MooseApp * app = AppFactory::createApp("LionApp", argc, argv);
-  std::shared_ptr<MooseApp> app = AppFactory::creatAppShared("LionApp", argc, argv);
+  std::shared_ptr<MooseApp> app = AppFactory::createAppShared("LionApp", argc, argv);
 
   // Execute the application
   app->run();
